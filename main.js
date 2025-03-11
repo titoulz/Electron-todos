@@ -3,11 +3,13 @@
 
 //le but est de creer la fenetre principale de notre application
 //on va devoir faire appel aux api electron
-const {app,BrowserWindow, ipcMain }= require("electron")
+const {app,BrowserWindow, ipcMain, Menu }= require("electron")
 const path = require("path")
+let window ; //variable qui va contenir la fenetre de l'application
+
 //on va creer une fct qui va creer une fenetre
 function CreateWindow(){
-    const window = new BrowserWindow({
+     window = new BrowserWindow({
         width:800,
         height:600,
         webPreferences:{
@@ -18,7 +20,63 @@ function CreateWindow(){
         }
        
     })
+    //creer le menu en appelant la fct CreateMenu
+    CreateMenu()
     window.loadFile("src/pages/index.html")
+}
+
+
+//function permettant de creer un menu personnalisé
+
+
+function CreateMenu(){
+
+    //on crée un tableau qui reprsente la structure du menu(modèle )
+
+
+    const template = [
+{
+    label: 'App',
+    submenu:[
+        {
+            label:'Version',
+            click :() =>window.loadFile('src/pages/index.html')
+        },
+        //separator permet de separer les elements du menu
+        {type:'separator'},
+         {
+        label:'Quit',
+        click:()=>app.quit()
+        
+         }
+    ]
+
+},
+{
+    label:"Taches",
+    submenu:[
+        {
+            label:"Liste des taches",
+            click:()=>window.loadFile('src/pages/liste-tache.html')
+        },
+        {
+            label:"Ajouter une tache",
+            click:()=>window.loadFile('src/pages/ajouter-tache.html')
+        }
+    ]
+}
+    ]
+
+
+
+    //on crée le MENU à partir du template
+    const menu = Menu.buildFromTemplate(template)
+    //definir le menu comme menu de l'application en utilisant la methode setApplicationMenu
+    Menu.setApplicationMenu(menu)
+
+
+
+
 }
 console.log("leconsollogymarche")
 //attendre l'initialisation de l'application
