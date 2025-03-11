@@ -4,14 +4,16 @@
 //le but est de creer la fenetre principale de notre application
 //on va devoir faire appel aux api electron
 const {app,BrowserWindow }= require("electron")
+const path = require("path")
 //on va creer une fct qui va creer une fenetre
 function CreateWindow(){
     const window = new BrowserWindow({
         width:800,
         height:600,
         webPreferences:{
-            nodeIntegration:true, //acces aux api node depuis les processus de rendu (cela permet d'acceder aux api node)
-            contextIsolation:false
+            nodeIntegration:false, //acces aux api node depuis les processus de rendu (cela permet d'acceder aux api node)
+            contextIsolation:true, //isoler le contexte de l'application (on isole le render du preload)
+            preload: path.join(__dirname,'src/js/preload') //script qui sera executé avant le chargement de la page (on precise qu'on utilise un preload)
         }
        
     })
